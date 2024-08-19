@@ -1,0 +1,69 @@
+---
+import MainLayout from "@layouts/MainLayout.astro";
+import { Image, Picture } from "astro:assets";
+
+import post05Img from "@images/post-05.png";
+
+---
+
+<MainLayout title="Imágenes">
+  <h1 class="text-5xl text-white">Imágenes</h1>
+
+  <img src="/assets/images/post-05.png" width="250" height="250" loading="eager">
+
+  <!-- <Image /> Optimiza la imagen haciendola más ligera y crea su por defecto su version WEBP -->
+  <Image src={post05Img} alt="Imagen del post" width="250" height="250"/>
+  <Image 
+    src={post05Img} 
+    alt="Imagen del post"
+    style={{
+      width: "250px",
+      height: "250px",
+    }}
+    width="250" 
+    height="250"
+  />
+
+  <h1>Quality low</h1>
+  <!--  quality="low" hace mas ligera la imagen aun por la calidad -->
+  <Image src={post05Img} alt="Imagen del post" width="250" height="250" quality="low"/>
+
+  <h1>Quality high</h1>
+  <!-- quality="high" hace que la imagen tenga mejor calidad y por ende menos ligera -->
+  <Image src={post05Img} alt="Imagen del post" width="250" height="250" quality="high"/>
+
+
+  <h1>Formatos</h1>
+  <!-- format="<formato_image>" permite genera la imagen en otros formatos que no se WEBP, como JPG, AVIF, SVG, etc -->
+  <Image src={post05Img} alt="Imagen del post" width="250" height="250" format="avif" />
+
+  <h1>Picture</h1>
+  <!-- 
+    <Picture/> hace lo mismo que <Image/> solo que permite agregar 'formats' para que la imagen adapte el formato segun el soporte
+    del navegador.
+
+    formats={['webp','avif','jpeg','png']}
+
+    widths={[240, 540, 720, post05Img.width]}
+    sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${post05Img.width}px`}
+    -->
+  <Picture 
+    src={post05Img}
+    alt="Imagen del post"
+    width="250"
+    height="250"
+    width={post05Img.width / 2}
+    densities={[1.5, 2]}
+  />
+  
+  <div style={{
+    height: "3000px",
+  }}></div>
+  <img src="/assets/images/post-01.png" width="250" height="250" loading="lazy">
+</MainLayout>
+
+<style>
+  h1 {
+    @apply text-white mt-10;
+  }
+</style>

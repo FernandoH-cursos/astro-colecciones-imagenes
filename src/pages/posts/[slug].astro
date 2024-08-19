@@ -1,0 +1,76 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+
+import BlogLayout from "@layouts/BlogLayout.astro";
+import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
+import { Formatter } from "@utils/formatter";
+
+export const getStaticPaths = (async() => {
+  const blogPosts = await getCollection("blog");
+  
+  return blogPosts.map(post => ({
+    params: { slug: post.slug},
+    props:{ post},
+  }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props;
+
+const frontmatter = post.data;
+
+//* render() permite renderizar el contenido de un archivo markdown.
+//* 'Content' es un componente con el contenido del archivo markdown.
+//* 'headings' es un array con los títulos y su slug del archivo markdown.
+const {Content,headings} = await post.render();
+
+//* getEntry() permite obtener la información de un autor en específico. 
+const author = (await getEntry("author",frontmatter.author.id)).data;
+---
+
+<BlogLayout title={frontmatter.title}>
+  <h1 class="text-xs text-gray-500 mb-0">{frontmatter.title}</h1>
+  <!-- <h1 class="text-md text-gray-400 mb-0">{frontmatter.author}</h1> -->
+
+  <div class="flex flex-row mt-2 text-md text-gray-400 mb-0">
+    <Image
+      class="rounded-full"
+      src={author.avatar}
+      alt={author.name}
+      width={50}
+      height={50}
+    />
+
+    <div class="flex flex-col ml-5">
+      <a href={`/blog/${frontmatter.author.id}`}>{author.name}</a>
+      <span class="text-xs text-gray-200">
+        {Formatter.formatDate(frontmatter.date)}
+      </span>
+    </div>
+  </div>
+
+  <Image
+    class="object-cover w-full h-56 my-5 rounded-md"
+    src={frontmatter.image}
+    alt={frontmatter.title}
+    width={600}
+    height={220}
+    transition:name={`${post.slug}-image`}
+  />
+
+  <h3>Tabla de contenido</h3>
+  <ol>
+    {headings.map((heading,index) => (
+      <li>
+        <a href={`#${heading.slug}`}>{index + 1} - {heading.text}</a>
+      </li>
+    ))}
+  </ol>
+
+  <Content/>
+
+  <div class="my-20">
+    <a href="#btn-back" id="btn-back">Regresar</a>
+  </div>
+</BlogLayout>

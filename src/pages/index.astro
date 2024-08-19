@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+
+import MainLayout from "@layouts/MainLayout.astro";
+import TypedBlogPost from "@components/TypedBlogPost.astro";
+
+import { SITE_CONFIG } from "src/config/site-config";
+
+//* Obtiene toda la info de todos los blogs MD o MDX de content/blog
+//* Como segundo argumento se puede pasar una función para filtrar los posts.
+//* En este caso filtra para que solo muestre los posts que no sean borradores (que el 'isDraft' sea 'false'). 
+const blogPosts = await getCollection("blog",(post) => !post.data.isDraft);
+---
+
+<MainLayout title="Fernando's blog">
+  <section class="bg-gray-900">
+    <div class="container px-6 py-10 mx-auto">
+      <h1 class="text-3xl font-semibold capitalize lg:text-4xl text-white">{SITE_CONFIG.title}</h1>
+
+      <a class="mr-2" href="/blog/1">Blog paginado</a>
+      <a class="mr-2" href="/authors">Autores</a>
+
+      <div class="grid grid-cols-1 gap-8 mt-8 md:mt-16 md:grid-cols-2">
+        {
+          blogPosts.map(post => (
+            <TypedBlogPost post={post}/>
+          ))
+        }
+      </div>
+    </div>
+  </section> 
+</MainLayout>
+
+<style>
+  a {
+    @apply text-blue-500 hover:underline ;
+  }
+
+  .disabled {
+    @apply bg-gray-600 hover:bg-gray-600;
+  }
+</style>
