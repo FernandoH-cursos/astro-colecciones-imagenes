@@ -11,3 +11,9 @@
   - #### Imágenes para colecciones.
 - #### Zod - Validador de esquemas.
 - #### Relaciones de colecciones.
+- #### RSS Feed.
+  - #### HTTP GET.
+  - #### rss.xml.
+  - #### Aplicación de News Feed.
+  - #### Paquetes propios para generar feeds.
+  - #### Metadata de nuestro __"news feed"__.
