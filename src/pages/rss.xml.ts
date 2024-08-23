@@ -18,6 +18,7 @@ export const GET: APIRoute = async ({ params, request, site }) => {
     title: "Fernando Blog",
     //* `<description>` campo en el xml generado
     description: "Un simple blog de mis aventuras con astro",
+    //* Habilita algunas metadatas para que funcione el RSS
     xmlns: {
       media: "http://search.yahoo.com/mrss/",
     },
@@ -33,10 +34,11 @@ export const GET: APIRoute = async ({ params, request, site }) => {
       //* Ruta relativa a la raíz del sitio de posts escritos en markdown
       link: `posts/${slug}`,
 
+      //* Agrega el contenido del blog, parsea el mardown y sanitiza el HTML 
       content: sanitizeHtml(parser.render(body), {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
       }),
-
+      //* Agrega la imagen del blog
       customData: `<media:content
         type="image/${data.image.format === "jpg" ? "jpeg" : "png"}"
         width="${data.image.width}"
